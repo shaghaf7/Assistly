@@ -1,8 +1,21 @@
+"use client";
 import Avatar from "@/components/Avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CREATE_CHATBOT } from "@/graphql/mutations/mutation";
+import { useMutation } from "@apollo/client";
+import { useUser } from "@clerk/nextjs";
+import { useState } from "react";
 
 function CreateChatbot() {
+  const {user}  = useUser();  
+  const [name, setName] = useState('');
+  const [createChatbot,{data,loading,error}] = useMutation(CREATE_CHATBOT, {
+    variables: {
+      clerk_user_id: user?.id,
+     name,
+    }
+  });
   return (
     <div className="flex flex-col items-center justify-center md:flex-row md:space-x-10 bg-white p-10 rounded-md m-10">
       <Avatar seed="create-chatbot" />
@@ -19,6 +32,8 @@ function CreateChatbot() {
           />
           <Button className="bg-blue-950" type="submit">Create Chatbot</Button>
         </form>
+
+        <p className="text-gray-300 mt-5">Example: Customer Support Chatbot</p>
       </div>
     </div>
   );
